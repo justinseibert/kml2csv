@@ -9,7 +9,6 @@ def add_data_columns(kml):
     columns = ['address','lat','lng'] #default columns
     
     for pm in kml.find_all('Placemark',limit=1): #other data columns
-        print(pm)
         for child in pm.contents[7].find_all('Data'):
             columns.append(child['name'])
 
@@ -26,14 +25,14 @@ def populate_data(kml,writer):
         data.append(coords[0]) # lng
 
         for child in pm.contents[7].find_all('Data'): #other data
-            val = str(child.find('value').string)
-            if val == '0' or val == 'None' or val.lower() == 'no' or val.lower() == 'false':
-                val = '' # assigns boolean false to ''
-            elif val == '1' or val.lower() == 'yes' or val.lower() == 'true':
-                val = 'x' # assigns boolean true to 'x'
+            val = child.find('value').string
+            if val == None or val == '' or val == '0':
+                val = ''
+            elif val == '1' or val == 'x' or val.lower() == 'yes' or val.lower() == 'true':
+                val = 'x'
             data.append(val)
-    
-        writer.writerow(data)
+
+        writer.writerow([unicode(d).encode("utf-8") for d in data])
 
 def main(inputfile,outputfile):
     with open(inputfile, 'r') as f:
