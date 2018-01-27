@@ -10,5 +10,5 @@ with help from [mciantyre/KmlToCsv.py](https://gist.github.com/mciantyre/32ff2c2
 install requirements
 
 ```
-$ python3 kml2csv.py input.kml output.csv
+$ python kml2csv.py input.kml output.csv
 ```
