@@ -14,13 +14,12 @@ class Colors:
     ENDC = '\033[0m'
 
 class Kml2Csv:
-    def __init__(self, options, inputFile):
+    def __init__(self, options):
         self.folders = []
         self.columns = []
         self.styleColumns = []
         self.indexFolder = 0
         self.indexRow = 0
-        self.inputFile = inputFile
         self.options = options
         self.rows = []
         self.styleMap = {}
@@ -100,7 +99,7 @@ class Kml2Csv:
         return columns
 
     def convert(self):
-        with open(self.inputFile, 'r') as f:
+        with open(self.options['inputFile'], 'r') as f:
             kml = BeautifulSoup(f, 'xml')
 
             if (self.options['styles']):
@@ -129,10 +128,13 @@ class Kml2Csv:
                 print(f'{Colors.LTGREEN}created: {Colors.ENDC}{outputFile}')
 
 if __name__ == "__main__":
-    inputFile = sys.argv[1]
+    inputFile = ''
+    while inputFile == '':
+        inputFile = input(f'{Colors.LTGREEN}specify the input file: {Colors.ENDC}')
 
     options = {
-        'outputDir': input(f'{Colors.LTGREEN}specify the destination folder {Colors.DKGREEN}(./output): {Colors.ENDC}') or './output',
+        'inputFile': path.abspath(inputFile),
+        'outputDir': input(f'{Colors.LTGREEN}specify a destination directory {Colors.DKGREEN}(./output): {Colors.ENDC}') or './output',
         'styles': input(f'{Colors.LTGREEN}include styles? {Colors.DKGREEN}(y/N): {Colors.ENDC}') == 'y',
     }
 
@@ -141,5 +143,5 @@ if __name__ == "__main__":
     except:
         print('Error: unable to create directory: %s', options['outputDir'])
 
-    result = Kml2Csv(options, inputFile)
+    result = Kml2Csv(options)
     result.convert()
